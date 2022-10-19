@@ -1,0 +1,135 @@
+#rollback and commit
+use prograd;
+create table student(id int,ename varchar(10));
+insert into student values (1,'megha'),(2,'vandana');
+select * from student;
+update student set ename="shivani" where id=2;
+rollback;
+commit;
+
+#joins
+use prograd;
+create table teacher (id int, name varchar(10),sub varchar(10));
+create table course (courseid int, coursetitle varchar(10),teacherid int references teacher(id),courseprice int);
+insert into teacher values (1,'mayuri','maths'),(2,'Kiran','science'),
+(3,'Muttu','social');
+select * from teacher;
+select * from course;
+
+insert into course values(001,'java',1,15000),(002,'python',2,10000),
+(003,'html',3,20000),(004,'css',4,13000);
+#inner join
+select * from teacher inner join course on course.teacherid=teacher.id;
+select * from teacher left join course on course.teacherid=teacher.id;
+select * from teacher right join course on course.teacherid=teacher.id;
+select * from course cross join teacher;
+drop table teacher;
+drop table course;
+#group by
+select * from course group by teacherid;
+#having
+select * from course group by teacherid having count(teacherid)>2;
+#subqueries
+insert into course values(5,'java',5,7000);
+insert into teacher values(5,'mayuri','eng');
+select avg(courseprice) as avg from course where coursetitle="java" and teacherid=(select id from teacher where name='mayuri'and sub='maths');
+select coursetitle from course where teacherid=(select id from teacher where name='eng');
+#numeric functions
+select 27 div 4;
+#built in functions
+select ucase(name) from teacher where id=2;
+select lcase(name) from teacher where id=2;
+
+
+use prograd;
+DROP FUNCTION IF EXISTS hello;
+#non-parametarized
+
+Delimiter $
+create function hello()
+returns varchar(20)
+deterministic
+begin
+return "Hello, I am Megha";
+end$
+Delimiter ;
+
+select hello() as 'Greetings';
+
+
+# parametarized
+
+Delimiter $
+create function addition(num1 int,num2 int)
+returns int
+deterministic
+begin
+return num1+num2;
+end$
+Delimiter ;
+select addition(2,3);
+# to find age
+Delimiter $
+create function calculate(dob date)
+returns date
+deterministic
+begin
+declare today_date date;
+select current_date() into today_date;
+Return year(today_date)-year(dob);
+end$
+Delimiter ;
+
+select calculate('1995-07-20') as 'your age';
+
+use prograd;
+#stored procedure
+Delimiter $
+create procedure getTeacherAndCourseInfo()
+begin
+select * from teacher;
+select * from course;
+end $
+Delimiter ;
+
+call getTeacherAndCourseInfo();
+
+#parametarized stored procedire with in
+
+Delimiter $
+create procedure getTeacherNameFromId(in id int)
+begin
+select name from teacher where teacher.id=id;
+end$
+Delimiter ;
+
+call getTeacherNameFromId(1)
+
+#parametarized stored procedire with out
+Delimiter $
+create procedure getTeacherRecordFromId(out rec int)
+begin
+select count(*) into rec from teacher where teacher.id=1;
+end $
+Delimiter ;
+
+call getTeacherRecordFromId(@rec);
+select @rec as 'totalRecords';
+
+#view
+select * from course;
+create view courseview as select courseid,coursetitle from course;
+select * from courseview;
+
+#in and out both
+Delimiter $
+create procedure getCountByName(in Name varchar(10),out totalcount int)
+begin
+select count(*) into totalcount from teacher where teacher.name=Name;
+end$
+Delimiter ;
+
+drop procedure getCountByName;
+
+call  getCountByName('mayuri',@totalcount);
+select @totalcount as 'total';

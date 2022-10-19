@@ -1,0 +1,27 @@
+use assignment;
+create table books(Book_id varchar(10),Book_Name varchar(15),
+Author_name varchar(15),Publishers varchar(10),Price int,Type varchar(10),
+Qty int);
+insert into books values
+('C0001','Fast Cook','Lata Kapoor','EPB',355,'Cookery',5),
+('F0001','The Tears','William Hopkins','First Publ',650,'Fiction',20),
+('T0001','My First C++','Brain and Brook','EPB',350,'Text',10),
+('T0002','C++ Brain Works','AW Rossaine','TDH',350,'Text',15),
+('F0002','Thunderbolts','Anna Roberts','First Publ',750,'Fiction',50);
+select * from books;
+create table issued (Book_id varchar(10),Quantity_issued int);
+insert into issued values ('T0001',4),
+('C0001',5),('F0001',2);
+select Book_Name,Author_name,Price,Quantity_issued from books join 
+issued on
+ books.Publishers="First Publ" and books.Book_id=issued.Book_id;
+
+select Author_Name from books join issued on books.Type="Text" and
+books.Book_id=issued.Book_id;
+SELECT Book_Name FROM books WHERE Type= 'TEXT' AND
+ Book_id = ANY(SELECT Book_id FROM issued);
+ select Book_Name ,Price from books order by Price asc;
+ select Price+50 from books where Publishers="EPB";
+ select count(*) from books;
+select max(Price) from books where Qty>=15;  
+select Book_Name ,Author_Name from books where Publishers="EPB";

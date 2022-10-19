@@ -1,0 +1,28 @@
+create database assignment;
+use assignment;
+create table teacher_relation(No int,Name varchar(10),Age int,
+Department varchar(10),DOJ date,Salary int,Sex varchar(1));
+insert into teacher_relation values
+ (1,'Jugal',34,'Computer','1997-01-10',12000,'M'),
+ (2,'Sharmila',31,'History','1998-03-24',20000,'F'),
+ (3,'Sandeep',32,'Maths','1996-12-12',30000,'M'),
+ (4,'Sangeeta',35,'History','1999-07-01',40000,'F'),
+ (5,'Rakesh',42,'Maths','1997-09-05',25000,'M'),
+ (6,'Shyam',50,'History','1998-06-27',30000,'M'),
+ (7,'Shiv Om',44,'Computer','1997-02-25',21000,'M'),
+ (8,'Shalakha',33,'Maths','1997-07-31',20000,'F');
+ select * from teacher_relation;
+ select * from teacher_relation where Department="History";
+ select Name from teacher_relation where Sex="F" and Department=
+ "Maths";
+ select Name from teacher_relation order by DOJ asc;
+ select Name,Salary,Age from teacher_relation where Sex="M";
+ select Name,Salary,Age,0.05*Salary as Bonus from teacher_relation;
+ select Name,DOJ from teacher_relation where DOJ like "1997%";
+ select * from teacher_relation where No<4;
+ select * from teacher_relation where No>3;
+ insert into teacher_relation values(9,'Raja',26,'Computer','1995-05-13',2300,'M');
+ select count(distinct Department) from teacher_relation;
+ select max(Age) from teacher_relation where Sex='F';
+ select avg(Salary) from teacher_relation where Sex='M';
+  select sum(Salary) from teacher_relation where DOJ<'1997-01-01';
