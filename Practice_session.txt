@@ -133,3 +133,49 @@ drop procedure getCountByName;
 
 call  getCountByName('mayuri',@totalcount);
 select @totalcount as 'total';
+
+#triggers
+select * from employee;
+
+create table employeeone(
+eno int,
+bdept int,
+adept int);
+DELIMITER $
+CREATE TRIGGER properdept
+after update on employee for each row
+begin
+if old.DEPT>NEW.DEPT then insert into employeeone values(old.ENO,old.DEPT,new.DEPT);
+end if;
+end$
+Delimiter ;
+
+update employee set DEPT=20 WHERE ENO=7499;
+SELECT * from employee;
+select * from employeeone;
+#transactions
+start transaction;
+delete from employee where SAL=2800;
+COMMIT;
+insert into employee values(7000,"Megha","CLERK",7899,'2001-03-18',3000,null,40);
+rollback;
+#savepoint
+start transaction;
+select * from employee;
+update employee set SAL=SAL+100;
+savepoint pointone;
+insert into employee values (7000,"Megha","CLERK",7899,'2001-03-18',3000,null,40);
+rollback to pointone;
+commit;
+#banking transaction with deposit and withdrawl
+create table Bank_Passbook(
+account_no int,
+balalnce int);
+insert into Bank_Passbook values(100,80000);
+start transaction;
+update Bank_Passbook set balalnce=balalnce+500 where account_no=100;
+savepoint spoint;
+update Bank_Passbook set balalnce=balalnce-10 where account_no=100;
+rollback to spoint;
+commit;
+select * from Bank_Passbook;
